@@ -9,17 +9,30 @@ export function normalizeFormats(
   formats: RawFormat[],
   meta: { title: string; duration: number | null; platform: Platform },
 ): DownloadFormat[] {
-  const candidates = formats.filter(
-    (item) =>
-      item.url &&
-      isAllowedMediaCdn(item.url) &&
+  const candidates = formats.filter((item) => {
+    const hasDeclaredAudioAndVideo =
       item.vcodec &&
       item.vcodec !== "none" &&
       item.acodec &&
-      item.acodec !== "none" &&
+      item.acodec !== "none";
+    // Instagram's progressive Reel URLs are intentionally sparse: yt-dlp
+    // selects them for direct download but reports neither codec nor size.
+    const isInstagramProgressive =
+      meta.platform === "instagram" &&
+      item.ext === "mp4" &&
+      !item.container?.includes("dash") &&
+      !item.format_id?.startsWith("dash-") &&
+      (!item.vcodec || item.vcodec === "unknown") &&
+      (!item.acodec || item.acodec === "unknown");
+
+    return (
+      item.url &&
+      isAllowedMediaCdn(item.url) &&
+      (hasDeclaredAudioAndVideo || isInstagramProgressive) &&
       ["https", "http"].includes(item.protocol ?? "https") &&
-      ["mp4", "webm"].includes((item.ext ?? "").toLowerCase()),
-  );
+      ["mp4", "webm"].includes((item.ext ?? "").toLowerCase())
+    );
+  });
 
   const preferred = new Map<string, RawFormat>();
   for (const item of candidates) {
@@ -64,4 +77,3 @@ export function normalizeFormats(
       };
     });
 }
-

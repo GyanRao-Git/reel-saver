@@ -23,6 +23,9 @@ export type RawFormat = {
   format_note?: string;
   ext?: string;
   protocol?: string;
+  container?: string;
+  audio_ext?: string;
+  video_ext?: string;
   acodec?: string;
   vcodec?: string;
   url?: string;
@@ -42,4 +45,3 @@ export type ExtractedMedia = {
   availability?: string;
   formats?: RawFormat[];
 };
-

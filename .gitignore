@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+
+# Next.js build output and caches
+.next/
+out/
+*.tsbuildinfo
+.eslintcache
+.stylelintcache
+
+# Vercel local project metadata
+.vercel/
+
+# Tests and coverage
+tests/
+e2e/
+vitest.config.ts
+playwright.config.ts
+playwright-report/
+test-results/
+blob-report/
+coverage/
+
+# Local environment files (keep the safe template)
+.env*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor and OS metadata
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Generated framework agent hints (not used by the application)
+AGENTS.md
+CLAUDE.md

@@ -15,7 +15,7 @@ It does not support playlists, live streams, private or login-required media, re
 
 ## Local setup
 
-Requirements: Node.js 22.12 or newer and npm. Installation downloads the appropriate `yt-dlp` binary for the current operating system.
+Requirements: Node.js 22.12 or newer and npm. Installation downloads the appropriate `yt-dlp` binary for the current operating system. Linux deployments additionally install yt-dlp's standalone executable so the runtime does not require Python.
 
 ```bash
 npm install

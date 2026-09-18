@@ -7,9 +7,19 @@ export interface MediaExtractor {
   extract(url: string, platform: Platform): Promise<ExtractedMedia>;
 }
 
+export function getYtDlpFilename(
+  platform: NodeJS.Platform = process.platform,
+  architecture: string = process.arch,
+) {
+  if (platform === "win32") return "yt-dlp.exe";
+  if (platform === "linux" && architecture === "arm64") return "yt-dlp_linux_aarch64";
+  if (platform === "linux") return "yt-dlp_linux";
+  return "yt-dlp";
+}
+
 export function getYtDlpPath() {
   if (process.env.YT_DLP_PATH) return process.env.YT_DLP_PATH;
-  const filename = process.platform === "win32" ? "yt-dlp.exe" : "yt-dlp";
+  const filename = getYtDlpFilename();
   return path.join(process.cwd(), "node_modules", "youtube-dl-exec", "bin", filename);
 }
 
@@ -53,6 +63,13 @@ export class YtDlpExtractor implements MediaExtractor {
           "The media extractor executable is missing from this deployment.",
           500,
           "EXTRACTOR_MISSING",
+        );
+      }
+      if (message.includes("python3") && message.includes("no such file")) {
+        throw new AppError(
+          "This deployment contains the Python yt-dlp script instead of the standalone executable.",
+          500,
+          "EXTRACTOR_RUNTIME_MISSING",
         );
       }
       throw error;
